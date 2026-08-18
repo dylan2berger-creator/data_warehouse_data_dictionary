@@ -1,0 +1,644 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDAP Data Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f4f6f5;
+    --surface: #ffffff;
+    --surface-2: #eaeeec;
+    --border: #d7ddda;
+    --border-soft: #e4e8e6;
+    --text: #16221f;
+    --text-dim: #4d5b57;
+    --text-faint: #7c8985;
+    --accent: #0f6e6a;
+    --accent-strong: #0a4f4c;
+    --accent-tint: #e3f1ef;
+    --accent-contrast: #ffffff;
+    --focus: #0f6e6a;
+    --cat-fact: #0f6e6a;
+    --cat-fact-bg: #e3f1ef;
+    --cat-dim: #35528f;
+    --cat-dim-bg: #e6ecf7;
+    --cat-agg: #9a6a10;
+    --cat-agg-bg: #f7edd9;
+    --cat-wd: #6a4694;
+    --cat-wd-bg: #eee6f6;
+    --cat-audit: #a13a3a;
+    --cat-audit-bg: #f7e3e3;
+    --cat-other: #5b6663;
+    --cat-other-bg: #e9ecea;
+    --shadow: 0 1px 2px rgba(20,30,28,0.06), 0 6px 20px rgba(20,30,28,0.05);
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0d1615;
+      --surface: #121e1c;
+      --surface-2: #172522;
+      --border: #24352f;
+      --border-soft: #1c2b27;
+      --text: #e7efec;
+      --text-dim: #a9bab4;
+      --text-faint: #75887f;
+      --accent: #3fc9bd;
+      --accent-strong: #6fe0d4;
+      --accent-tint: #123330;
+      --accent-contrast: #06211e;
+      --focus: #3fc9bd;
+      --cat-fact: #3fc9bd;
+      --cat-fact-bg: #123330;
+      --cat-dim: #8fb0ea;
+      --cat-dim-bg: #17253c;
+      --cat-agg: #e0b158;
+      --cat-agg-bg: #35290f;
+      --cat-wd: #c6a6ec;
+      --cat-wd-bg: #2a1f3c;
+      --cat-audit: #e58787;
+      --cat-audit-bg: #3a1c1c;
+      --cat-other: #a3b3ac;
+      --cat-other-bg: #1b2926;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0d1615;
+    --surface: #121e1c;
+    --surface-2: #172522;
+    --border: #24352f;
+    --border-soft: #1c2b27;
+    --text: #e7efec;
+    --text-dim: #a9bab4;
+    --text-faint: #75887f;
+    --accent: #3fc9bd;
+    --accent-strong: #6fe0d4;
+    --accent-contrast: #06211e;
+    --focus: #3fc9bd;
+    --cat-fact: #3fc9bd;
+    --cat-fact-bg: #123330;
+    --cat-dim: #8fb0ea;
+    --cat-dim-bg: #17253c;
+    --cat-agg: #e0b158;
+    --cat-agg-bg: #35290f;
+    --cat-wd: #c6a6ec;
+    --cat-wd-bg: #2a1f3c;
+    --cat-audit: #e58787;
+    --cat-audit-bg: #3a1c1c;
+    --cat-other: #a3b3ac;
+    --cat-other-bg: #1b2926;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:14.5px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background: var(--accent); color: var(--accent-contrast); }
+  a{ color: var(--accent-strong); }
+  :focus-visible{ outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+  .app{ display:grid; grid-template-rows: auto 1fr; height:100vh; }
+
+  /* ---- Top bar ---- */
+  .topbar{
+    display:flex; align-items:center; gap:20px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    z-index: 20;
+  }
+  .brand{ display:flex; align-items:baseline; gap:9px; white-space:nowrap; }
+  .brand .mark{
+    font-family: var(--mono); font-weight:600; font-size:15px;
+    color: var(--accent-contrast); background: var(--accent);
+    padding: 3px 7px; border-radius: 5px; letter-spacing: 0.02em;
+  }
+  .brand .name{ font-weight:700; font-size:16.5px; letter-spacing:-0.01em; }
+  .brand .sub{ color:var(--text-faint); font-size:12.5px; display:none; }
+  @media (min-width:760px){ .brand .sub{ display:inline; } }
+
+  .globalsearch{ flex:1; max-width: 640px; position:relative; }
+  .globalsearch input{
+    width:100%; padding: 9px 12px 9px 34px;
+    border:1px solid var(--border); border-radius: 8px;
+    background: var(--surface-2); color:var(--text);
+    font-family:var(--sans); font-size: 13.5px;
+  }
+  .globalsearch input:focus{ background:var(--surface); }
+  .globalsearch svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); opacity:0.55; pointer-events:none; }
+  .globalsearch kbd{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    font-family:var(--mono); font-size:11px; color:var(--text-faint);
+    border:1px solid var(--border); border-radius:4px; padding:1px 5px;
+    background:var(--surface);
+  }
+  .topstats{ display:none; gap:18px; font-family:var(--mono); font-size:12px; color:var(--text-dim); white-space:nowrap; }
+  @media (min-width:980px){ .topstats{ display:flex; } }
+  .topstats b{ color:var(--text); font-weight:600; }
+  .theme-note{ font-size:11px; color:var(--text-faint); }
+
+  /* ---- Shell ---- */
+  .shell{ display:grid; grid-template-columns: 300px 1fr; min-height:0; }
+  @media (max-width: 860px){ .shell{ grid-template-columns: 1fr; } }
+
+  .sidebar{
+    border-right:1px solid var(--border);
+    background: var(--surface);
+    display:flex; flex-direction:column; min-height:0;
+  }
+  @media (max-width:860px){
+    .sidebar{ position:fixed; inset: 96px 0 0 0; z-index:15; transform:translateX(-101%); transition:transform .18s ease; }
+    .sidebar.open{ transform:translateX(0); }
+  }
+  .sidebar-controls{ padding: 12px 14px 8px; border-bottom:1px solid var(--border-soft); }
+  .chipsrow{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+  .chip{
+    font-family:var(--mono); font-size:11.5px; padding: 4px 9px; border-radius:999px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text-dim);
+    cursor:pointer; user-select:none; display:inline-flex; align-items:center; gap:6px;
+  }
+  .chip .n{ opacity:0.65; font-variant-numeric: tabular-nums; }
+  .chip.active{ background:var(--accent); border-color:var(--accent); color:var(--accent-contrast); }
+  .chip.active .n{ opacity:0.85; }
+  .sortrow{ display:flex; align-items:center; justify-content:space-between; margin-top:9px; font-size:11.5px; color:var(--text-faint); }
+  .sortrow select{ font-family:var(--sans); font-size:11.5px; color:var(--text-dim); background:transparent; border:1px solid var(--border); border-radius:6px; padding:3px 6px; }
+
+  .tablelist{ flex:1; overflow-y:auto; padding: 4px 0 40px; }
+  .group{ }
+  .group-head{
+    position:sticky; top:0; background:var(--surface);
+    padding: 10px 14px 5px; font-family:var(--mono); font-size:11px;
+    letter-spacing:0.06em; text-transform:uppercase; color:var(--text-faint);
+    display:flex; align-items:center; gap:7px; z-index:2;
+  }
+  .group-head .dot{ width:7px; height:7px; border-radius:50%; }
+  .item{
+    display:block; width:100%; text-align:left; padding: 8px 14px 8px 16px;
+    border:0; background:transparent; cursor:pointer; border-left:3px solid transparent;
+    color:var(--text);
+  }
+  .item:hover{ background: var(--surface-2); }
+  .item.active{ background:var(--accent-tint); border-left-color:var(--accent); }
+  .item .t-name{ font-family:var(--mono); font-size:12.6px; font-weight:600; display:block; overflow-wrap:anywhere; }
+  .item.active .t-name{ color:var(--accent-strong); }
+  .item .t-desc{ display:block; font-size:11.8px; color:var(--text-faint); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .item .t-meta{ display:block; font-size:10.8px; color:var(--text-faint); margin-top:3px; }
+  .item .t-match{ font-size:10.8px; color:var(--accent-strong); margin-top:3px; }
+  .empty-hint{ padding: 30px 18px; color:var(--text-faint); font-size:12.8px; text-align:center; }
+
+  /* ---- Main ---- */
+  .main{ min-height:0; overflow-y:auto; }
+  .mobiletoggle{
+    display:none; position:fixed; bottom:18px; left:18px; z-index:16;
+    background:var(--accent); color:var(--accent-contrast); border:none;
+    border-radius:999px; padding:11px 16px; font-family:var(--sans); font-weight:600;
+    font-size:13px; box-shadow:var(--shadow);
+  }
+  @media (max-width:860px){ .mobiletoggle{ display:inline-flex; align-items:center; gap:6px; } }
+
+  .landing{ max-width: 900px; margin: 0 auto; padding: 48px 28px 80px; }
+  .landing h1{ font-size: 27px; letter-spacing:-0.01em; margin: 0 0 8px; text-wrap:balance; }
+  .landing .lead{ color:var(--text-dim); font-size:15px; max-width:64ch; margin:0 0 30px; }
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom: 34px; }
+  .stat-card{ border:1px solid var(--border); background:var(--surface); border-radius:10px; padding:14px 16px; box-shadow:var(--shadow); }
+  .stat-card .num{ font-family:var(--mono); font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .stat-card .lbl{ font-size:11.5px; color:var(--text-faint); margin-top:2px; text-transform:uppercase; letter-spacing:0.04em; }
+  .catbars{ display:flex; flex-direction:column; gap:9px; margin-bottom:38px; }
+  .catbar-row{ display:grid; grid-template-columns: 130px 1fr 46px; align-items:center; gap:10px; }
+  .catbar-row .lbl{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .catbar-track{ height:9px; border-radius:5px; background:var(--surface-2); overflow:hidden; }
+  .catbar-fill{ height:100%; border-radius:5px; }
+  .catbar-row .cnt{ font-family:var(--mono); font-size:11.5px; color:var(--text-faint); text-align:right; font-variant-numeric:tabular-nums; }
+  .howto{ border:1px dashed var(--border); border-radius:10px; padding:16px 18px; color:var(--text-dim); font-size:13px; }
+  .howto b{ color:var(--text); }
+  .howto kbd{ font-family:var(--mono); font-size:11px; border:1px solid var(--border); border-radius:4px; padding:1px 5px; background:var(--surface-2); }
+
+  .tablepage{ max-width: 1080px; margin:0 auto; padding: 30px 28px 90px; }
+  .t-header{ margin-bottom:20px; }
+  .t-titlerow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .t-titlerow h1{ font-family:var(--mono); font-size:22px; font-weight:600; margin:0; letter-spacing:-0.01em; overflow-wrap:anywhere; }
+  .badge{ font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:999px; font-weight:600; white-space:nowrap; }
+  .t-sub{ margin-top:8px; color:var(--text-dim); font-size:13.6px; max-width:80ch; }
+  .metarow{ display:flex; gap:18px; flex-wrap:wrap; margin-top:12px; font-size:12px; color:var(--text-faint); }
+  .metarow .mi b{ color:var(--text-dim); font-weight:600; }
+  .metarow .mi{ display:flex; gap:5px; }
+  .callout{ margin-top:12px; border-left:3px solid var(--accent); background:var(--accent-tint); padding:9px 13px; border-radius:0 6px 6px 0; font-size:12.8px; color:var(--text-dim); }
+
+  .fieldbar{ display:flex; align-items:center; gap:10px; margin: 22px 0 12px; }
+  .fieldbar input{
+    flex:1; max-width:340px; padding:7px 11px; border:1px solid var(--border); border-radius:7px;
+    background:var(--surface); color:var(--text); font-size:13px;
+  }
+  .fieldbar .fcount{ font-family:var(--mono); font-size:11.5px; color:var(--text-faint); }
+  .fieldbar .exportlink{ margin-left:auto; font-size:11.5px; color:var(--text-faint); background:none; border:1px solid var(--border); border-radius:6px; padding:5px 9px; cursor:pointer; font-family:var(--sans); }
+  .fieldbar .exportlink:hover{ color:var(--text); border-color:var(--text-faint); }
+
+  .fieldtable{ border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow); }
+  .frow{ border-bottom:1px solid var(--border-soft); }
+  .frow:last-child{ border-bottom:none; }
+  .fmain{
+    display:grid; grid-template-columns: minmax(160px,1.3fr) 90px 76px minmax(200px,2fr) 32px;
+    gap:12px; align-items:start; padding:11px 14px; cursor:pointer;
+  }
+  .fmain:hover{ background:var(--surface-2); }
+  @media (max-width:700px){ .fmain{ grid-template-columns: 1fr 32px; } .fmain .f-type, .fmain .f-req, .fmain .f-def{ display:none; } }
+  .f-name{ font-family:var(--mono); font-size:12.6px; font-weight:600; overflow-wrap:anywhere; }
+  .f-type{ font-family:var(--mono); font-size:11.5px; color:var(--text-dim); align-self:center; }
+  .f-req{ align-self:center; }
+  .req-y{ color:var(--cat-fact); font-family:var(--mono); font-size:11px; font-weight:600; }
+  .req-n{ color:var(--text-faint); font-family:var(--mono); font-size:11px; }
+  .f-def{ font-size:12.6px; color:var(--text-dim); }
+  .f-def .none{ color:var(--text-faint); font-style:italic; }
+  .f-toggle{ color:var(--text-faint); align-self:center; justify-self:end; transition:transform .12s ease; }
+  .frow.open .f-toggle{ transform:rotate(90deg); color:var(--accent-strong); }
+  .fdetail{ display:none; padding: 4px 14px 16px 14px; font-size:12.4px; color:var(--text-dim); }
+  .frow.open .fdetail{ display:block; }
+  .fdetail-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:6px; }
+  .fdetail-block b{ display:block; font-size:10.8px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-faint); margin-bottom:4px; font-weight:600; }
+  .fdetail-block .lineage-row{ font-family:var(--mono); font-size:11.8px; padding:5px 0; border-bottom:1px dotted var(--border-soft); }
+  .fdetail-block .lineage-row:last-child{ border-bottom:none; }
+  .fdetail-block ul{ margin:0; padding-left:16px; }
+  .fdetail-block li{ margin-bottom:3px; }
+  .tag-mono{ font-family:var(--mono); background:var(--surface-2); border-radius:4px; padding:1px 5px; }
+
+  .rulesbox{ margin-top:26px; }
+  .rulesbox h3{ font-size:13px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-faint); margin:0 0 10px; }
+  .rule-item{ border:1px solid var(--border); border-radius:8px; padding:10px 13px; margin-bottom:8px; background:var(--surface); font-size:12.6px; }
+  .rule-item .rlabel{ font-family:var(--mono); font-size:11px; color:var(--accent-strong); font-weight:600; display:block; margin-bottom:3px; }
+
+  .noresults{ padding: 60px 20px; text-align:center; color:var(--text-faint); }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">DW</span>
+      <span class="name">BDAP Data Atlas</span>
+      <span class="sub">warehouse data dictionary</span>
+    </div>
+    <div class="globalsearch">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Search tables, fields, definitions…" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+    <div class="topstats" id="topstats"></div>
+  </div>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-controls">
+        <div class="chipsrow" id="catchips"></div>
+        <div class="sortrow">
+          <span id="visiblecount"></span>
+          <select id="sortmode">
+            <option value="alpha">Sort: A–Z</option>
+            <option value="fields">Sort: field count</option>
+          </select>
+        </div>
+      </div>
+      <div class="tablelist" id="tablelist"></div>
+    </aside>
+
+    <main class="main" id="main"></main>
+  </div>
+  <button class="mobiletoggle" id="mobiletoggle">☰ Tables</button>
+</div>
+
+<script id="dw-data" type="application/json">__DATA_JSON__</script>
+<script>
+(function(){
+  "use strict";
+  const RAW = JSON.parse(document.getElementById('dw-data').textContent);
+  const TABLES = Object.values(RAW.tables);
+
+  const CAT_ORDER = ['Fact','Dimension','Aggregate','Workday Journal / Validation','Audit','Other'];
+  const CAT_LABEL = {
+    'Fact':'Fact tables', 'Dimension':'Dimensions', 'Aggregate':'Aggregates',
+    'Workday Journal / Validation':'Workday journals', 'Audit':'Audit', 'Other':'Other / staging'
+  };
+  const CAT_VARS = {
+    'Fact': ['--cat-fact','--cat-fact-bg'], 'Dimension': ['--cat-dim','--cat-dim-bg'],
+    'Aggregate': ['--cat-agg','--cat-agg-bg'], 'Workday Journal / Validation': ['--cat-wd','--cat-wd-bg'],
+    'Audit': ['--cat-audit','--cat-audit-bg'], 'Other': ['--cat-other','--cat-other-bg']
+  };
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function catColor(cat){ const v = CAT_VARS[cat] || CAT_VARS['Other']; return {fg:cssVar(v[0]), bg:cssVar(v[1])}; }
+
+  TABLES.forEach(t=>{
+    const hay = [t.display_name, t.description, t.source_system, t.staging_source, t.category]
+      .concat((t.fields||[]).map(f=>f.field_name))
+      .concat((t.fields||[]).map(f=>f.definition||''))
+      .join(' \n ').toLowerCase();
+    t._hay = hay;
+    t._fieldhay = (t.fields||[]).map(f => (f.field_name+' '+(f.definition||'')).toLowerCase());
+  });
+
+  const totalFields = TABLES.reduce((a,t)=>a+t.field_count,0);
+  document.getElementById('topstats').innerHTML =
+    `<span><b>${TABLES.length}</b> tables</span><span><b>${totalFields.toLocaleString()}</b> fields</span>`;
+
+  const state = { query:'', cat:'ALL', sort:'alpha', activeId:null };
+
+  function normalize(s){ return (s||'').toLowerCase(); }
+
+  function matchesQuery(t, q){
+    if(!q) return {ok:true, fieldHits:0};
+    const parts = q.split(/\s+/).filter(Boolean);
+    let ok = true;
+    parts.forEach(p=>{ if(t._hay.indexOf(p)===-1) ok=false; });
+    if(!ok) return {ok:false, fieldHits:0};
+    let fieldHits = 0;
+    if(t._fieldhay.length){
+      t._fieldhay.forEach(fh=>{
+        let allIn = true;
+        parts.forEach(p=>{ if(fh.indexOf(p)===-1) allIn=false; });
+        if(allIn) fieldHits++;
+      });
+    }
+    return {ok:true, fieldHits};
+  }
+
+  function catCounts(){
+    const c = {};
+    CAT_ORDER.forEach(k=>c[k]=0);
+    TABLES.forEach(t=>{ c[t.category] = (c[t.category]||0)+1; });
+    return c;
+  }
+
+  function renderChips(){
+    const counts = catCounts();
+    const chips = document.getElementById('catchips');
+    const all = `<button class="chip ${state.cat==='ALL'?'active':''}" data-cat="ALL">All <span class="n">${TABLES.length}</span></button>`;
+    const rest = CAT_ORDER.filter(c=>counts[c]>0).map(c=>
+      `<button class="chip ${state.cat===c?'active':''}" data-cat="${c}">${CAT_LABEL[c]} <span class="n">${counts[c]}</span></button>`
+    ).join('');
+    chips.innerHTML = all + rest;
+    chips.querySelectorAll('.chip').forEach(el=>{
+      el.addEventListener('click', ()=>{ state.cat = el.dataset.cat; renderList(); });
+    });
+  }
+
+  function renderList(){
+    const q = normalize(state.query);
+    let filtered = TABLES.filter(t=> state.cat==='ALL' || t.category===state.cat);
+    let results = filtered.map(t=>({t, m: matchesQuery(t,q)})).filter(r=>r.m.ok);
+
+    document.getElementById('visiblecount').textContent = `${results.length} of ${TABLES.length}`;
+
+    if(state.sort==='alpha'){
+      results.sort((a,b)=> a.t.display_name.localeCompare(b.t.display_name));
+    } else {
+      results.sort((a,b)=> b.t.field_count - a.t.field_count);
+    }
+
+    const groups = {};
+    results.forEach(r=>{ (groups[r.t.category] = groups[r.t.category]||[]).push(r); });
+
+    const list = document.getElementById('tablelist');
+    if(results.length===0){
+      list.innerHTML = `<div class="empty-hint">No tables match “${escapeHtml(state.query)}”.</div>`;
+      return;
+    }
+
+    let html = '';
+    const order = state.cat==='ALL' ? CAT_ORDER : [state.cat];
+    order.forEach(cat=>{
+      const items = groups[cat];
+      if(!items || !items.length) return;
+      const col = catColor(cat);
+      html += `<div class="group"><div class="group-head"><span class="dot" style="background:${col.fg}"></span>${CAT_LABEL[cat]} · ${items.length}</div>`;
+      items.forEach(({t,m})=>{
+        const active = t.id === state.activeId ? 'active' : '';
+        const desc = t.description ? escapeHtml(t.description) : '';
+        html += `<button class="item ${active}" data-id="${escapeAttr(t.id)}">
+          <span class="t-name">${escapeHtml(t.display_name)}</span>
+          ${desc ? `<span class="t-desc">${desc}</span>` : ''}
+          <span class="t-meta">${t.field_count} field${t.field_count===1?'':'s'}${t.source_system? ' · '+escapeHtml(t.source_system):''}</span>
+          ${ (q && m.fieldHits>0) ? `<span class="t-match">${m.fieldHits} matching field${m.fieldHits===1?'':'s'}</span>` : '' }
+        </button>`;
+      });
+      html += `</div>`;
+    });
+    list.innerHTML = html;
+    list.querySelectorAll('.item').forEach(el=>{
+      el.addEventListener('click', ()=>{ selectTable(el.dataset.id); closeMobileSidebar(); });
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  function renderLanding(){
+    const counts = catCounts();
+    const max = Math.max(...Object.values(counts), 1);
+    const barsHtml = CAT_ORDER.filter(c=>counts[c]>0).map(c=>{
+      const col = catColor(c);
+      const pct = Math.round((counts[c]/max)*100);
+      return `<div class="catbar-row">
+        <span class="lbl">${CAT_LABEL[c]}</span>
+        <span class="catbar-track"><span class="catbar-fill" style="width:${pct}%;background:${col.fg}"></span></span>
+        <span class="cnt">${counts[c]}</span>
+      </div>`;
+    }).join('');
+
+    document.getElementById('main').innerHTML = `
+      <div class="landing">
+        <h1>What's in the warehouse</h1>
+        <p class="lead">A field-level reference for every fact, dimension, and aggregate table in the repair-order data warehouse — sourced from the staging-to-warehouse mapping spec. Built for scanning: search once, find the table, see exactly what each field means and where it comes from.</p>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="num">${TABLES.length}</div><div class="lbl">Tables</div></div>
+          <div class="stat-card"><div class="num">${totalFields.toLocaleString()}</div><div class="lbl">Documented fields</div></div>
+          <div class="stat-card"><div class="num">${counts['Fact']||0}</div><div class="lbl">Fact tables</div></div>
+          <div class="stat-card"><div class="num">${counts['Dimension']||0}</div><div class="lbl">Dimensions</div></div>
+        </div>
+        <div class="catbars">${barsHtml}</div>
+        <div class="howto">
+          <b>How to use this</b> — Search by table name, field name, or a word from a definition (try “insurance” or “vin”). Filter by table type on the left, or pick a table to see every field with its data type, whether it's required, its business definition, and how it's derived from source systems. Press <kbd>/</kbd> to jump to search.
+        </div>
+      </div>`;
+  }
+
+  function fieldRowHtml(f, idx){
+    const req = f.mandatory ? (String(f.mandatory).trim().toUpperCase().startsWith('Y')
+        ? `<span class="req-y">YES</span>` : `<span class="req-n">${escapeHtml(f.mandatory)}</span>`)
+      : `<span class="req-n">—</span>`;
+    const def = f.definition ? escapeHtml(f.definition) : `<span class="none">no definition provided</span>`;
+    const hasDetail = f.sources.length || f.transformation_rules.length || f.ge_rules.length || f.notes.length || f.comments.length || f.join_conditions.length || f.legacy.length;
+
+    let detail = '';
+    if(hasDetail){
+      let blocks = '';
+      if(f.sources.length){
+        blocks += `<div class="fdetail-block"><b>Lineage</b>${f.sources.map(s=>{
+          const left = [s.source_table, s.source_field].filter(Boolean).join('.');
+          const right = [s.athena_table, s.athena_field].filter(Boolean).join('.');
+          const fmt = s.source_format ? ` <span class="tag-mono">${escapeHtml(s.source_format)}</span>` : '';
+          return `<div class="lineage-row">${escapeHtml(left||'—')}${right? ' → '+escapeHtml(right):''}${fmt}</div>`;
+        }).join('')}</div>`;
+      }
+      if(f.transformation_rules.length){
+        blocks += `<div class="fdetail-block"><b>Transformation</b><ul>${f.transformation_rules.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.ge_rules.length){
+        blocks += `<div class="fdetail-block"><b>Data quality rules</b><ul>${f.ge_rules.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.join_conditions.length){
+        blocks += `<div class="fdetail-block"><b>Join condition</b><ul>${f.join_conditions.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.notes.length){
+        blocks += `<div class="fdetail-block"><b>Notes</b><ul>${f.notes.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.comments.length){
+        blocks += `<div class="fdetail-block"><b>Comments</b><ul>${f.comments.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.legacy.length){
+        blocks += `<div class="fdetail-block"><b>Legacy mapping</b><ul>${f.legacy.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      detail = `<div class="fdetail-grid">${blocks}</div>`;
+    }
+
+    return `<div class="frow" data-idx="${idx}">
+      <div class="fmain">
+        <span class="f-name">${escapeHtml(f.field_name)}</span>
+        <span class="f-type">${f.data_type? escapeHtml(f.data_type): '—'}</span>
+        <span class="f-req">${req}</span>
+        <span class="f-def">${def}</span>
+        <span class="f-toggle">${hasDetail? '▸':''}</span>
+      </div>
+      <div class="fdetail">${detail || '<span style="color:var(--text-faint)">No additional lineage or notes.</span>'}</div>
+    </div>`;
+  }
+
+  function renderTable(t){
+    const col = catColor(t.category);
+    let fieldQuery = '';
+
+    function fieldsFiltered(){
+      if(!fieldQuery) return t.fields;
+      const q = fieldQuery.toLowerCase();
+      return t.fields.filter(f => (f.field_name+' '+(f.definition||'')).toLowerCase().indexOf(q)!==-1);
+    }
+
+    function draw(){
+      const fields = fieldsFiltered();
+      const fieldsHtml = fields.length
+        ? fields.map((f,i)=>fieldRowHtml(f,i)).join('')
+        : `<div class="noresults">No fields match that search.</div>`;
+
+      const rulesHtml = (t.table_rules && t.table_rules.length) ? `
+        <div class="rulesbox">
+          <h3>Business rules &amp; load notes</h3>
+          ${t.table_rules.map(r=>`<div class="rule-item"><span class="rlabel">${escapeHtml(r.label)}</span>${escapeHtml(r.text)}</div>`).join('')}
+        </div>` : '';
+
+      const meta = [];
+      if(t.warehouse_type) meta.push(`<div class="mi"><b>Type</b><span>${escapeHtml(t.warehouse_type)}</span></div>`);
+      if(t.source_system) meta.push(`<div class="mi"><b>Source system</b><span>${escapeHtml(t.source_system)}</span></div>`);
+      if(t.staging_source) meta.push(`<div class="mi"><b>Staging source</b><span>${escapeHtml(t.staging_source.replace(/\n/g,', '))}</span></div>`);
+      meta.push(`<div class="mi"><b>Sheet</b><span>${escapeHtml(t.sheet_name)}</span></div>`);
+
+      document.getElementById('main').innerHTML = `
+        <div class="tablepage">
+          <div class="t-header">
+            <div class="t-titlerow">
+              <h1>${escapeHtml(t.display_name)}</h1>
+              <span class="badge" style="background:${col.bg};color:${col.fg}">${escapeHtml(t.category)}</span>
+            </div>
+            ${t.description? `<div class="t-sub">${escapeHtml(t.description)}</div>` : ''}
+            <div class="metarow">${meta.join('')}</div>
+            ${t.catalog_comments? `<div class="callout">${escapeHtml(t.catalog_comments)}</div>`: ''}
+          </div>
+
+          <div class="fieldbar">
+            <input id="fieldsearch" type="text" placeholder="Filter ${t.field_count} fields…" value="${escapeAttr(fieldQuery)}">
+            <span class="fcount">${fields.length} of ${t.field_count} field${t.field_count===1?'':'s'}</span>
+            <button class="exportlink" id="expandall">Expand all</button>
+          </div>
+
+          <div class="fieldtable" id="fieldtable">${fieldsHtml}</div>
+          ${rulesHtml}
+        </div>`;
+
+      const input = document.getElementById('fieldsearch');
+      input.addEventListener('input', ()=>{ fieldQuery = input.value; draw(); positionCaret(); });
+      const ft = document.getElementById('fieldtable');
+      ft.querySelectorAll('.frow').forEach(row=>{
+        row.addEventListener('click', (e)=>{ row.classList.toggle('open'); });
+      });
+      let expanded = false;
+      document.getElementById('expandall').addEventListener('click', ()=>{
+        expanded = !expanded;
+        ft.querySelectorAll('.frow').forEach(row=> row.classList.toggle('open', expanded));
+        document.getElementById('expandall').textContent = expanded ? 'Collapse all' : 'Expand all';
+      });
+    }
+
+    function positionCaret(){
+      const el = document.getElementById('fieldsearch');
+      if(el){ el.focus(); const v = el.value; el.value=''; el.value=v; }
+    }
+
+    draw();
+    window.scrollTo(0,0);
+    document.getElementById('main').scrollTop = 0;
+  }
+
+  function selectTable(id){
+    const t = RAW.tables[id];
+    if(!t) return;
+    state.activeId = id;
+    location.hash = 'table/' + encodeURIComponent(id);
+    renderList();
+    renderTable(t);
+  }
+
+  function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
+
+  document.getElementById('mobiletoggle').addEventListener('click', ()=>{
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  const searchInput = document.getElementById('search');
+  searchInput.addEventListener('input', ()=>{ state.query = searchInput.value; renderList(); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='/' && document.activeElement.tagName!=='INPUT'){ e.preventDefault(); searchInput.focus(); }
+  });
+  document.getElementById('sortmode').addEventListener('change', (e)=>{ state.sort = e.target.value; renderList(); });
+
+  function routeFromHash(){
+    const h = location.hash;
+    const m = h.match(/^#\/?table\/(.+)$/);
+    if(m){
+      const id = decodeURIComponent(m[1]);
+      if(RAW.tables[id]){ state.activeId = id; renderList(); renderTable(RAW.tables[id]); return; }
+    }
+    state.activeId = null;
+    renderList();
+    renderLanding();
+  }
+  window.addEventListener('hashchange', routeFromHash);
+
+  renderChips();
+  routeFromHash();
+})();
+</script>
