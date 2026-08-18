@@ -31,6 +31,16 @@
     --cat-audit-bg: #f7e3e3;
     --cat-other: #5b6663;
     --cat-other-bg: #e9ecea;
+    --pal-0-fg: #4338ca; --pal-0-bg: #e8e6fb;
+    --pal-1-fg: #0369a1; --pal-1-bg: #e0f2fe;
+    --pal-2-fg: #047857; --pal-2-bg: #d9f5ea;
+    --pal-3-fg: #92620a; --pal-3-bg: #faf0d7;
+    --pal-4-fg: #b3324b; --pal-4-bg: #fbe4e9;
+    --pal-5-fg: #7c3aed; --pal-5-bg: #efe6fd;
+    --pal-6-fg: #0e7490; --pal-6-bg: #dff5f7;
+    --pal-7-fg: #b5540f; --pal-7-bg: #fbe8d9;
+    --pal-8-fg: #475569; --pal-8-bg: #e7ebef;
+    --pal-9-fg: #be185d; --pal-9-bg: #fbe1ec;
     --shadow: 0 1px 2px rgba(20,30,28,0.06), 0 6px 20px rgba(20,30,28,0.05);
     --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -63,6 +73,16 @@
       --cat-audit-bg: #3a1c1c;
       --cat-other: #a3b3ac;
       --cat-other-bg: #1b2926;
+      --pal-0-fg: #a5a0f5; --pal-0-bg: #241f4a;
+      --pal-1-fg: #7dd3fc; --pal-1-bg: #0b2a3d;
+      --pal-2-fg: #6ee7b7; --pal-2-bg: #0b2a20;
+      --pal-3-fg: #f3cd7c; --pal-3-bg: #33260a;
+      --pal-4-fg: #f4a3b3; --pal-4-bg: #3a1620;
+      --pal-5-fg: #c9a6fb; --pal-5-bg: #2a1f45;
+      --pal-6-fg: #7fd8e6; --pal-6-bg: #0c2b30;
+      --pal-7-fg: #f6b581; --pal-7-bg: #3a220c;
+      --pal-8-fg: #b9c2cc; --pal-8-bg: #232a31;
+      --pal-9-fg: #f2a2c6; --pal-9-bg: #3a1526;
       --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
       color-scheme: dark;
     }
@@ -92,6 +112,16 @@
     --cat-audit-bg: #3a1c1c;
     --cat-other: #a3b3ac;
     --cat-other-bg: #1b2926;
+    --pal-0-fg: #a5a0f5; --pal-0-bg: #241f4a;
+    --pal-1-fg: #7dd3fc; --pal-1-bg: #0b2a3d;
+    --pal-2-fg: #6ee7b7; --pal-2-bg: #0b2a20;
+    --pal-3-fg: #f3cd7c; --pal-3-bg: #33260a;
+    --pal-4-fg: #f4a3b3; --pal-4-bg: #3a1620;
+    --pal-5-fg: #c9a6fb; --pal-5-bg: #2a1f45;
+    --pal-6-fg: #7fd8e6; --pal-6-bg: #0c2b30;
+    --pal-7-fg: #f6b581; --pal-7-bg: #3a220c;
+    --pal-8-fg: #b9c2cc; --pal-8-bg: #232a31;
+    --pal-9-fg: #f2a2c6; --pal-9-bg: #3a1526;
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
     color-scheme: dark;
   }
@@ -111,7 +141,21 @@
   a{ color: var(--accent-strong); }
   :focus-visible{ outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
 
-  .app{ display:grid; grid-template-rows: auto 1fr; height:100vh; }
+  .app{ display:grid; grid-template-rows: auto auto 1fr; height:100vh; }
+
+  /* ---- Dataset tabs ---- */
+  .subbar{
+    display:flex; align-items:center; gap:8px; padding:9px 18px;
+    border-bottom:1px solid var(--border); background:var(--surface-2);
+    overflow-x:auto; z-index:19;
+  }
+  .dtab{
+    font-family:var(--sans); font-weight:600; font-size:12.5px; padding:6px 14px;
+    border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    color:var(--text-dim); cursor:pointer; white-space:nowrap;
+  }
+  .dtab:hover{ color:var(--text); border-color:var(--text-faint); }
+  .dtab.active{ background:var(--accent); border-color:var(--accent); color:var(--accent-contrast); }
 
   /* ---- Top bar ---- */
   .topbar{
@@ -199,6 +243,7 @@
   .item .t-desc{ display:block; font-size:11.8px; color:var(--text-faint); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .item .t-meta{ display:block; font-size:10.8px; color:var(--text-faint); margin-top:3px; }
   .item .t-match{ font-size:10.8px; color:var(--accent-strong); margin-top:3px; }
+  .unmapped{ font-style:italic; }
   .empty-hint{ padding: 30px 18px; color:var(--text-faint); font-size:12.8px; text-align:center; }
 
   /* ---- Main ---- */
@@ -297,9 +342,9 @@
 <div class="app">
   <div class="topbar">
     <button class="brand" id="brandhome" type="button" title="Back to overview">
-      <span class="mark">DW</span>
+      <span class="mark">DA</span>
       <span class="name">BDAP Data Atlas</span>
-      <span class="sub">warehouse data dictionary</span>
+      <span class="sub">warehouse &amp; data lake dictionary</span>
     </button>
     <div class="globalsearch">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -308,6 +353,8 @@
     </div>
     <div class="topstats" id="topstats"></div>
   </div>
+
+  <div class="subbar" id="datasettabs"></div>
 
   <div class="shell">
     <aside class="sidebar" id="sidebar">
@@ -333,36 +380,93 @@
 <script>
 (function(){
   "use strict";
-  const RAW = JSON.parse(document.getElementById('dw-data').textContent);
-  const TABLES = Object.values(RAW.tables);
+  const COMBINED = JSON.parse(document.getElementById('dw-data').textContent);
+  const DATASET_ORDER = COMBINED.datasetOrder;
+  const DATASETS = COMBINED.datasets;
 
-  const CAT_ORDER = ['Fact','Dimension','Aggregate','Workday Journal / Validation','Audit','Other'];
-  const CAT_LABEL = {
-    'Fact':'Fact tables', 'Dimension':'Dimensions', 'Aggregate':'Aggregates',
-    'Workday Journal / Validation':'Workday journals', 'Audit':'Audit', 'Other':'Other / staging'
-  };
-  const CAT_VARS = {
+  const FIXED_CAT_VARS = {
     'Fact': ['--cat-fact','--cat-fact-bg'], 'Dimension': ['--cat-dim','--cat-dim-bg'],
     'Aggregate': ['--cat-agg','--cat-agg-bg'], 'Workday Journal / Validation': ['--cat-wd','--cat-wd-bg'],
     'Audit': ['--cat-audit','--cat-audit-bg'], 'Other': ['--cat-other','--cat-other-bg']
   };
-  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-  function catColor(cat){ const v = CAT_VARS[cat] || CAT_VARS['Other']; return {fg:cssVar(v[0]), bg:cssVar(v[1])}; }
+  const FIXED_CAT_LABEL = {
+    'Fact':'Fact tables', 'Dimension':'Dimensions', 'Aggregate':'Aggregates',
+    'Workday Journal / Validation':'Workday journals', 'Audit':'Audit', 'Other':'Other / staging'
+  };
+  const PALETTE_SIZE = 10;
 
-  TABLES.forEach(t=>{
-    const hay = [t.display_name, t.description, t.source_system, t.staging_source, t.category]
-      .concat((t.fields||[]).map(f=>f.field_name))
-      .concat((t.fields||[]).map(f=>f.definition||''))
-      .join(' \n ').toLowerCase();
-    t._hay = hay;
-    t._fieldhay = (t.fields||[]).map(f => (f.field_name+' '+(f.definition||'')).toLowerCase());
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function hashStr(s){
+    let h = 0;
+    for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
+    return h;
+  }
+
+  function catColor(cat){
+    const fixed = FIXED_CAT_VARS[cat];
+    if(fixed) return {fg:cssVar(fixed[0]), bg:cssVar(fixed[1])};
+    const idx = hashStr(cat) % PALETTE_SIZE;
+    return {fg:cssVar(`--pal-${idx}-fg`), bg:cssVar(`--pal-${idx}-bg`)};
+  }
+
+  function catLabel(cat){ return FIXED_CAT_LABEL[cat] || cat; }
+
+  DATASET_ORDER.forEach(dsId=>{
+    const dset = DATASETS[dsId];
+    dset.tableList = Object.values(dset.tables);
+    dset.tableList.forEach(t=>{
+      const hay = [t.display_name, t.description, t.source_system, t.staging_source, t.category, t.catalog_comments]
+        .concat((t.fields||[]).map(f=>f.field_name))
+        .concat((t.fields||[]).map(f=>f.definition||''))
+        .join(' \n ').toLowerCase();
+      t._hay = hay;
+      t._fieldhay = (t.fields||[]).map(f => (f.field_name+' '+(f.definition||'')).toLowerCase());
+    });
+    dset.totalFields = dset.tableList.reduce((a,t)=>a+t.field_count,0);
   });
 
-  const totalFields = TABLES.reduce((a,t)=>a+t.field_count,0);
-  document.getElementById('topstats').innerHTML =
-    `<span><b>${TABLES.length}</b> tables</span><span><b>${totalFields.toLocaleString()}</b> fields</span>`;
+  const DATASET_UI = {
+    warehouse: {
+      heroTitle: "What's in the warehouse",
+      heroLead: "A field-level reference for every fact, dimension, and aggregate table in the repair-order data warehouse — sourced from the staging-to-warehouse mapping spec. Built for scanning: search once, find the table, see exactly what each field means and where it comes from.",
+      howto: "Search by table name, field name, or a word from a definition (try “insurance” or “vin”). Filter by table type on the left, or pick a table to see every field with its data type, whether it's required, its business definition, and how it's derived from source systems. Press <kbd>/</kbd> to jump to search.",
+      statCards(dset, counts){
+        return [
+          {num: dset.tableList.length, lbl:'Tables'},
+          {num: dset.totalFields.toLocaleString(), lbl:'Documented fields'},
+          {num: counts['Fact']||0, lbl:'Fact tables'},
+          {num: counts['Dimension']||0, lbl:'Dimensions'},
+        ];
+      }
+    },
+    datalake: {
+      heroTitle: "What's landing in the data lake",
+      heroLead: "A field-level reference for every raw ingestion feed captured from source systems before it's transformed into the warehouse — sourced from the source-to-data-lake mapping spec.",
+      howto: "Search by table name, field name, or a word from a definition (try “vin” or “claim”). Filter by source system on the left. Tables with no field-level mapping yet still show up with their feed type, format, frequency, and S3 path — the source team just hasn't documented individual fields for them. Press <kbd>/</kbd> to jump to search.",
+      statCards(dset, counts){
+        const undocumented = dset.tableList.filter(t=>t.documented===false).length;
+        return [
+          {num: dset.tableList.length, lbl:'Tables'},
+          {num: dset.totalFields.toLocaleString(), lbl:'Documented fields'},
+          {num: Object.keys(counts).length, lbl:'Source systems'},
+          {num: undocumented, lbl:'Awaiting field mapping'},
+        ];
+      }
+    }
+  };
+  function uiFor(dsId){
+    return DATASET_UI[dsId] || {
+      heroTitle: `What's in ${DATASETS[dsId].label}`,
+      heroLead: `A field-level reference for every table in ${DATASETS[dsId].label}.`,
+      howto: `Search by table name, field name, or a word from a definition. Filter by category on the left. Press <kbd>/</kbd> to jump to search.`,
+      statCards(dset){ return [{num:dset.tableList.length,lbl:'Tables'},{num:dset.totalFields.toLocaleString(),lbl:'Documented fields'}]; }
+    };
+  }
 
-  const state = { query:'', cat:'ALL', sort:'alpha', activeId:null };
+  const state = { datasetId: DATASET_ORDER[0], query:'', cat:'ALL', sort:'alpha', activeId:null };
+  function ds(){ return DATASETS[state.datasetId]; }
+  function TABLES(){ return ds().tableList; }
 
   function normalize(s){ return (s||'').toLowerCase(); }
 
@@ -385,17 +489,31 @@
 
   function catCounts(){
     const c = {};
-    CAT_ORDER.forEach(k=>c[k]=0);
-    TABLES.forEach(t=>{ c[t.category] = (c[t.category]||0)+1; });
+    TABLES().forEach(t=>{ c[t.category] = (c[t.category]||0)+1; });
     return c;
+  }
+  function catOrder(counts){
+    return Object.keys(counts).sort((a,b)=> counts[b]-counts[a] || a.localeCompare(b));
+  }
+
+  function renderDatasetTabs(){
+    const el = document.getElementById('datasettabs');
+    el.innerHTML = DATASET_ORDER.map(id=>{
+      const active = id===state.datasetId ? 'active' : '';
+      return `<button class="dtab ${active}" data-ds="${escapeAttr(id)}">${escapeHtml(DATASETS[id].label)}</button>`;
+    }).join('');
+    el.querySelectorAll('.dtab').forEach(btn=>{
+      btn.addEventListener('click', ()=> onTabClick(btn.dataset.ds));
+    });
   }
 
   function renderChips(){
     const counts = catCounts();
+    const order = catOrder(counts);
     const chips = document.getElementById('catchips');
-    const all = `<button class="chip ${state.cat==='ALL'?'active':''}" data-cat="ALL">All <span class="n">${TABLES.length}</span></button>`;
-    const rest = CAT_ORDER.filter(c=>counts[c]>0).map(c=>
-      `<button class="chip ${state.cat===c?'active':''}" data-cat="${c}">${CAT_LABEL[c]} <span class="n">${counts[c]}</span></button>`
+    const all = `<button class="chip ${state.cat==='ALL'?'active':''}" data-cat="ALL">All <span class="n">${TABLES().length}</span></button>`;
+    const rest = order.map(c=>
+      `<button class="chip ${state.cat===c?'active':''}" data-cat="${escapeAttr(c)}">${escapeHtml(catLabel(c))} <span class="n">${counts[c]}</span></button>`
     ).join('');
     chips.innerHTML = all + rest;
     chips.querySelectorAll('.chip').forEach(el=>{
@@ -405,10 +523,11 @@
 
   function renderList(){
     const q = normalize(state.query);
-    let filtered = TABLES.filter(t=> state.cat==='ALL' || t.category===state.cat);
+    const overallOrder = catOrder(catCounts());
+    let filtered = TABLES().filter(t=> state.cat==='ALL' || t.category===state.cat);
     let results = filtered.map(t=>({t, m: matchesQuery(t,q)})).filter(r=>r.m.ok);
 
-    document.getElementById('visiblecount').textContent = `${results.length} of ${TABLES.length}`;
+    document.getElementById('visiblecount').textContent = `${results.length} of ${TABLES().length}`;
 
     if(state.sort==='alpha'){
       results.sort((a,b)=> a.t.display_name.localeCompare(b.t.display_name));
@@ -426,19 +545,22 @@
     }
 
     let html = '';
-    const order = state.cat==='ALL' ? CAT_ORDER : [state.cat];
+    const order = state.cat==='ALL' ? overallOrder : [state.cat];
     order.forEach(cat=>{
       const items = groups[cat];
       if(!items || !items.length) return;
       const col = catColor(cat);
-      html += `<div class="group"><div class="group-head"><span class="dot" style="background:${col.fg}"></span>${CAT_LABEL[cat]} · ${items.length}</div>`;
+      html += `<div class="group"><div class="group-head"><span class="dot" style="background:${col.fg}"></span>${escapeHtml(catLabel(cat))} · ${items.length}</div>`;
       items.forEach(({t,m})=>{
         const active = t.id === state.activeId ? 'active' : '';
         const desc = t.description ? escapeHtml(t.description) : '';
+        const fieldLabel = t.field_count
+          ? `${t.field_count} field${t.field_count===1?'':'s'}`
+          : `<span class="unmapped">no field mapping yet</span>`;
         html += `<button class="item ${active}" data-id="${escapeAttr(t.id)}">
           <span class="t-name">${escapeHtml(t.display_name)}</span>
           ${desc ? `<span class="t-desc">${desc}</span>` : ''}
-          <span class="t-meta">${t.field_count} field${t.field_count===1?'':'s'}${t.source_system? ' · '+escapeHtml(t.source_system):''}</span>
+          <span class="t-meta">${fieldLabel}${t.source_system? ' · '+escapeHtml(t.source_system):''}</span>
           ${ (q && m.fieldHits>0) ? `<span class="t-match">${m.fieldHits} matching field${m.fieldHits===1?'':'s'}</span>` : '' }
         </button>`;
       });
@@ -457,30 +579,30 @@
 
   function renderLanding(){
     const counts = catCounts();
+    const order = catOrder(counts);
     const max = Math.max(...Object.values(counts), 1);
-    const barsHtml = CAT_ORDER.filter(c=>counts[c]>0).map(c=>{
+    const barsHtml = order.map(c=>{
       const col = catColor(c);
       const pct = Math.round((counts[c]/max)*100);
       return `<div class="catbar-row">
-        <span class="lbl">${CAT_LABEL[c]}</span>
+        <span class="lbl">${escapeHtml(catLabel(c))}</span>
         <span class="catbar-track"><span class="catbar-fill" style="width:${pct}%;background:${col.fg}"></span></span>
         <span class="cnt">${counts[c]}</span>
       </div>`;
     }).join('');
 
+    const ui = uiFor(state.datasetId);
+    const cards = ui.statCards(ds(), counts);
+    const cardsHtml = cards.map(c=>`<div class="stat-card"><div class="num">${c.num}</div><div class="lbl">${escapeHtml(c.lbl)}</div></div>`).join('');
+
     document.getElementById('main').innerHTML = `
       <div class="landing">
-        <h1>What's in the warehouse</h1>
-        <p class="lead">A field-level reference for every fact, dimension, and aggregate table in the repair-order data warehouse — sourced from the staging-to-warehouse mapping spec. Built for scanning: search once, find the table, see exactly what each field means and where it comes from.</p>
-        <div class="stat-grid">
-          <div class="stat-card"><div class="num">${TABLES.length}</div><div class="lbl">Tables</div></div>
-          <div class="stat-card"><div class="num">${totalFields.toLocaleString()}</div><div class="lbl">Documented fields</div></div>
-          <div class="stat-card"><div class="num">${counts['Fact']||0}</div><div class="lbl">Fact tables</div></div>
-          <div class="stat-card"><div class="num">${counts['Dimension']||0}</div><div class="lbl">Dimensions</div></div>
-        </div>
+        <h1>${escapeHtml(ui.heroTitle)}</h1>
+        <p class="lead">${escapeHtml(ui.heroLead)}</p>
+        <div class="stat-grid">${cardsHtml}</div>
         <div class="catbars">${barsHtml}</div>
         <div class="howto">
-          <b>How to use this</b> — Search by table name, field name, or a word from a definition (try “insurance” or “vin”). Filter by table type on the left, or pick a table to see every field with its data type, whether it's required, its business definition, and how it's derived from source systems. Press <kbd>/</kbd> to jump to search.
+          <b>How to use this</b> — ${ui.howto}
         </div>
       </div>`;
   }
@@ -490,7 +612,9 @@
         ? `<span class="req-y">YES</span>` : `<span class="req-n">${escapeHtml(f.mandatory)}</span>`)
       : `<span class="req-n">—</span>`;
     const def = f.definition ? escapeHtml(f.definition) : `<span class="none">no definition provided</span>`;
-    const hasDetail = f.sources.length || f.transformation_rules.length || f.ge_rules.length || f.notes.length || f.comments.length || f.join_conditions.length || f.legacy.length;
+    const hasDetail = f.sources.length || f.transformation_rules.length || f.ge_rules.length || f.notes.length
+      || f.comments.length || f.join_conditions.length || f.legacy.length
+      || (f.yaml_mapping && f.yaml_mapping.length) || (f.csv_fields && f.csv_fields.length) || (f.processed_paths && f.processed_paths.length);
 
     let detail = '';
     if(hasDetail){
@@ -521,6 +645,15 @@
       if(f.legacy.length){
         blocks += `<div class="fdetail-block"><b>Legacy mapping</b><ul>${f.legacy.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
       }
+      if(f.yaml_mapping && f.yaml_mapping.length){
+        blocks += `<div class="fdetail-block"><b>YAML mapping</b><ul>${f.yaml_mapping.map(x=>`<li><span class="tag-mono">${escapeHtml(x)}</span></li>`).join('')}</ul></div>`;
+      }
+      if(f.csv_fields && f.csv_fields.length){
+        blocks += `<div class="fdetail-block"><b>CSV field</b><ul>${f.csv_fields.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
+      if(f.processed_paths && f.processed_paths.length){
+        blocks += `<div class="fdetail-block"><b>Processed path</b><ul>${f.processed_paths.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`;
+      }
       detail = `<div class="fdetail-grid">${blocks}</div>`;
     }
 
@@ -536,9 +669,57 @@
     </div>`;
   }
 
+  function metaRow(label, value, opts){
+    if(!value) return '';
+    opts = opts || {};
+    const content = opts.link
+      ? `<a href="${escapeAttr(value)}" target="_blank" rel="noopener">${escapeHtml(opts.linkLabel||'Open ↗')}</a>`
+      : escapeHtml(value);
+    return `<div class="mi"><b>${escapeHtml(label)}</b><span>${content}</span></div>`;
+  }
+
   function renderTable(t){
     const col = catColor(t.category);
     let fieldQuery = '';
+
+    function headerHtml(){
+      const metaParts = [
+        metaRow('Type', t.warehouse_type),
+        metaRow('Source system', t.source_system),
+        metaRow('Staging source', t.staging_source ? t.staging_source.replace(/\n/g,', ') : null),
+        metaRow('File type', t.file_type),
+        metaRow('Feed type', t.feed_type),
+        metaRow('File format', t.file_format),
+        metaRow('Frequency', t.frequency),
+        metaRow('Direction', t.direction),
+        t.sheet_name ? metaRow('Sheet', t.sheet_name) : '',
+        metaRow('Source path', t.source_file_path, {link:true, linkLabel:'Source ↗'}),
+        metaRow('Target path', t.target_file_path, {link:true, linkLabel:'Target ↗'}),
+      ].filter(Boolean).join('');
+
+      const undocumentedNotice = t.documented === false
+        ? `<div class="callout">No field-level mapping has been documented for this table yet — showing catalog details only.</div>`
+        : '';
+
+      return `<div class="t-header">
+          <div class="t-titlerow">
+            <h1>${escapeHtml(t.display_name)}</h1>
+            <span class="badge" style="background:${col.bg};color:${col.fg}">${escapeHtml(catLabel(t.category))}</span>
+          </div>
+          ${t.description? `<div class="t-sub">${escapeHtml(t.description)}</div>` : ''}
+          <div class="metarow">${metaParts}</div>
+          ${t.catalog_comments? `<div class="callout">${escapeHtml(t.catalog_comments)}</div>`: ''}
+          ${undocumentedNotice}
+        </div>`;
+    }
+
+    function rulesHtml(){
+      return (t.table_rules && t.table_rules.length) ? `
+        <div class="rulesbox">
+          <h3>Business rules &amp; load notes</h3>
+          ${t.table_rules.map(r=>`<div class="rule-item"><span class="rlabel">${escapeHtml(r.label)}</span>${escapeHtml(r.text)}</div>`).join('')}
+        </div>` : '';
+    }
 
     function fieldsFiltered(){
       if(!fieldQuery) return t.fields;
@@ -547,34 +728,19 @@
     }
 
     function draw(){
+      if(t.field_count === 0){
+        document.getElementById('main').innerHTML = `<div class="tablepage">${headerHtml()}${rulesHtml()}</div>`;
+        return;
+      }
+
       const fields = fieldsFiltered();
       const fieldsHtml = fields.length
         ? fields.map((f,i)=>fieldRowHtml(f,i)).join('')
         : `<div class="noresults">No fields match that search.</div>`;
 
-      const rulesHtml = (t.table_rules && t.table_rules.length) ? `
-        <div class="rulesbox">
-          <h3>Business rules &amp; load notes</h3>
-          ${t.table_rules.map(r=>`<div class="rule-item"><span class="rlabel">${escapeHtml(r.label)}</span>${escapeHtml(r.text)}</div>`).join('')}
-        </div>` : '';
-
-      const meta = [];
-      if(t.warehouse_type) meta.push(`<div class="mi"><b>Type</b><span>${escapeHtml(t.warehouse_type)}</span></div>`);
-      if(t.source_system) meta.push(`<div class="mi"><b>Source system</b><span>${escapeHtml(t.source_system)}</span></div>`);
-      if(t.staging_source) meta.push(`<div class="mi"><b>Staging source</b><span>${escapeHtml(t.staging_source.replace(/\n/g,', '))}</span></div>`);
-      meta.push(`<div class="mi"><b>Sheet</b><span>${escapeHtml(t.sheet_name)}</span></div>`);
-
       document.getElementById('main').innerHTML = `
         <div class="tablepage">
-          <div class="t-header">
-            <div class="t-titlerow">
-              <h1>${escapeHtml(t.display_name)}</h1>
-              <span class="badge" style="background:${col.bg};color:${col.fg}">${escapeHtml(t.category)}</span>
-            </div>
-            ${t.description? `<div class="t-sub">${escapeHtml(t.description)}</div>` : ''}
-            <div class="metarow">${meta.join('')}</div>
-            ${t.catalog_comments? `<div class="callout">${escapeHtml(t.catalog_comments)}</div>`: ''}
-          </div>
+          ${headerHtml()}
 
           <div class="fieldbar">
             <input id="fieldsearch" type="text" placeholder="Filter ${t.field_count} fields…" value="${escapeAttr(fieldQuery)}">
@@ -592,7 +758,7 @@
             </div>
             ${fieldsHtml}
           </div>
-          ${rulesHtml}
+          ${rulesHtml()}
         </div>`;
 
       const input = document.getElementById('fieldsearch');
@@ -620,10 +786,10 @@
   }
 
   function selectTable(id){
-    const t = RAW.tables[id];
+    const t = ds().tables[id];
     if(!t) return;
     state.activeId = id;
-    location.hash = 'table/' + encodeURIComponent(id);
+    location.hash = state.datasetId + '/table/' + encodeURIComponent(id);
     renderList();
     renderTable(t);
   }
@@ -632,12 +798,37 @@
 
   function goHome(){
     state.activeId = null;
-    if(location.hash){ history.replaceState(null, '', location.pathname + location.search); }
+    history.replaceState(null, '', location.pathname + location.search + '#' + state.datasetId);
     renderList();
     renderLanding();
     closeMobileSidebar();
   }
   document.getElementById('brandhome').addEventListener('click', goHome);
+
+  function switchDataset(id, opts){
+    opts = opts || {};
+    const changed = state.datasetId !== id;
+    state.datasetId = id;
+    if(changed || opts.reset){
+      state.query = ''; state.cat = 'ALL'; state.sort = 'alpha';
+      const s = document.getElementById('search'); if(s) s.value = '';
+      const sm = document.getElementById('sortmode'); if(sm) sm.value = 'alpha';
+    }
+    document.getElementById('topstats').innerHTML =
+      `<span><b>${TABLES().length}</b> tables</span><span><b>${ds().totalFields.toLocaleString()}</b> fields</span>`;
+    renderDatasetTabs();
+    renderChips();
+  }
+
+  function onTabClick(id){
+    if(id === state.datasetId) return;
+    switchDataset(id, {reset:true});
+    state.activeId = null;
+    history.replaceState(null, '', location.pathname + location.search + '#' + id);
+    renderList();
+    renderLanding();
+    closeMobileSidebar();
+  }
 
   document.getElementById('mobiletoggle').addEventListener('click', ()=>{
     document.getElementById('sidebar').classList.toggle('open');
@@ -650,20 +841,31 @@
   });
   document.getElementById('sortmode').addEventListener('change', (e)=>{ state.sort = e.target.value; renderList(); });
 
+  function parseHash(){
+    const h = location.hash.replace(/^#\/?/, '');
+    if(!h) return {dsId:null, tableId:null};
+    const parts = h.split('/');
+    const dsId = parts[0];
+    const tableId = (parts[1]==='table' && parts[2]) ? decodeURIComponent(parts[2]) : null;
+    return {dsId, tableId};
+  }
+
   function routeFromHash(){
-    const h = location.hash;
-    const m = h.match(/^#\/?table\/(.+)$/);
-    if(m){
-      const id = decodeURIComponent(m[1]);
-      if(RAW.tables[id]){ state.activeId = id; renderList(); renderTable(RAW.tables[id]); return; }
+    const {dsId, tableId} = parseHash();
+    const targetDs = (dsId && DATASETS[dsId]) ? dsId : DATASET_ORDER[0];
+    switchDataset(targetDs);
+    if(tableId && DATASETS[targetDs].tables[tableId]){
+      state.activeId = tableId;
+      renderList();
+      renderTable(DATASETS[targetDs].tables[tableId]);
+    } else {
+      state.activeId = null;
+      renderList();
+      renderLanding();
     }
-    state.activeId = null;
-    renderList();
-    renderLanding();
   }
   window.addEventListener('hashchange', routeFromHash);
 
-  renderChips();
   routeFromHash();
 })();
 </script>
