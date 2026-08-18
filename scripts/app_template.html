@@ -256,6 +256,12 @@
     gap:12px; align-items:start; padding:11px 14px; cursor:pointer;
   }
   .fmain:hover{ background:var(--surface-2); }
+  .fhead{
+    cursor:default; padding-top:9px; padding-bottom:9px;
+    background:var(--surface-2); border-bottom:1px solid var(--border);
+    font-size:10.8px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-faint); font-weight:600;
+  }
+  .fhead:hover{ background:var(--surface-2); }
   @media (max-width:700px){ .fmain{ grid-template-columns: 1fr 32px; } .fmain .f-type, .fmain .f-req, .fmain .f-def{ display:none; } }
   .f-name{ font-family:var(--mono); font-size:12.6px; font-weight:600; overflow-wrap:anywhere; }
   .f-type{ font-family:var(--mono); font-size:11.5px; color:var(--text-dim); align-self:center; }
@@ -576,7 +582,16 @@
             <button class="exportlink" id="expandall">Expand all</button>
           </div>
 
-          <div class="fieldtable" id="fieldtable">${fieldsHtml}</div>
+          <div class="fieldtable" id="fieldtable">
+            <div class="fmain fhead">
+              <span>Field</span>
+              <span class="f-type">Type</span>
+              <span class="f-req">Required</span>
+              <span class="f-def">Definition</span>
+              <span></span>
+            </div>
+            ${fieldsHtml}
+          </div>
           ${rulesHtml}
         </div>`;
 
