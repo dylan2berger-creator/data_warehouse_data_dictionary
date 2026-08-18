@@ -121,7 +121,8 @@
     background: var(--surface);
     z-index: 20;
   }
-  .brand{ display:flex; align-items:baseline; gap:9px; white-space:nowrap; }
+  .brand{ display:flex; align-items:baseline; gap:9px; white-space:nowrap; background:none; border:none; padding:2px; margin:0; cursor:pointer; border-radius:6px; }
+  .brand:hover{ background:var(--surface-2); }
   .brand .mark{
     font-family: var(--mono); font-weight:600; font-size:15px;
     color: var(--accent-contrast); background: var(--accent);
@@ -221,7 +222,7 @@
   .catbar-row{ display:grid; grid-template-columns: 130px 1fr 46px; align-items:center; gap:10px; }
   .catbar-row .lbl{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
   .catbar-track{ height:9px; border-radius:5px; background:var(--surface-2); overflow:hidden; }
-  .catbar-fill{ height:100%; border-radius:5px; }
+  .catbar-fill{ display:block; height:100%; border-radius:5px; }
   .catbar-row .cnt{ font-family:var(--mono); font-size:11.5px; color:var(--text-faint); text-align:right; font-variant-numeric:tabular-nums; }
   .howto{ border:1px dashed var(--border); border-radius:10px; padding:16px 18px; color:var(--text-dim); font-size:13px; }
   .howto b{ color:var(--text); }
@@ -289,11 +290,11 @@
 
 <div class="app">
   <div class="topbar">
-    <div class="brand">
+    <button class="brand" id="brandhome" type="button" title="Back to overview">
       <span class="mark">DW</span>
       <span class="name">BDAP Data Atlas</span>
       <span class="sub">warehouse data dictionary</span>
-    </div>
+    </button>
     <div class="globalsearch">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search" type="text" placeholder="Search tables, fields, definitions…" autocomplete="off">
@@ -392,7 +393,7 @@
     ).join('');
     chips.innerHTML = all + rest;
     chips.querySelectorAll('.chip').forEach(el=>{
-      el.addEventListener('click', ()=>{ state.cat = el.dataset.cat; renderList(); });
+      el.addEventListener('click', ()=>{ state.cat = el.dataset.cat; renderChips(); renderList(); });
     });
   }
 
@@ -613,6 +614,15 @@
   }
 
   function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('open'); }
+
+  function goHome(){
+    state.activeId = null;
+    if(location.hash){ history.replaceState(null, '', location.pathname + location.search); }
+    renderList();
+    renderLanding();
+    closeMobileSidebar();
+  }
+  document.getElementById('brandhome').addEventListener('click', goHome);
 
   document.getElementById('mobiletoggle').addEventListener('click', ()=>{
     document.getElementById('sidebar').classList.toggle('open');
